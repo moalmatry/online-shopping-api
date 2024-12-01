@@ -1,0 +1,109 @@
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  password            String
+  verified            Boolean  @default(false)
+  active              Boolean  @default(true)
+  role                Role     @default(USER) // Add this line
+  verificationCode    String   @default(uuid())
+  passwordRestExpires String?  @default(dbgenerated("null"))
+  passwordRestCode    String? // Optional field
+  order               Order[]
+  profile             Profile?
+  address             Address?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
+}
+
+model Profile {
+  userId      String  @unique
+  user        User    @relation(fields: [userId], references: [id])
+  firstName   String
+  lastName    String
+  phoneNumber String? @unique @default(dbgenerated("null"))
+  gender      Gender  @default(MALE)
+}
+
+model Address {
+  userId  String  @unique
+  user    User    @relation(fields: [userId], references: [id])
+  street  String?
+  city    String?
+  state   String?
+  zipCode String?
+}
+
+model Order {
+  id          String    @id @default(uuid())
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  totalAmount Float
+  status      Status    @default(PENDING)
+  products    Product[]
+}
+
+model Category {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  products Product[]
+}
+
+model Product {
+  id           String    @id @default(uuid())
+  name         String
+  price        Float
+  images       String[]
+  description  String?
+  available    Boolean   @default(true)
+  tags         String[]
+  categoryName String
+  category     Category  @relation(fields: [categoryName], references: [name])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now())
+  variants     Variant[]
+  Order        Order?    @relation(fields: [orderId], references: [id])
+  orderId      String?
+}
+
+model Variant {
+  id        String  @id @default(uuid())
+  size      String?
+  price     Float
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Role {
+  USER
+  ADMIN
+  EMPLOYEE
+}
+
+enum Status {
+  PENDING
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  RETURNED
+}
