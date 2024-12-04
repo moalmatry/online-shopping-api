@@ -114,21 +114,26 @@ export const updatePassword = async (id: string, password: string) => {
   });
 };
 /** @description return all users  */
-export const getUsers = async (startIndex: number, startLimit: number) => {
+export const getUsers = async (startIndex: number, startLimit: number, email?: string) => {
   const index = startIndex || 0;
   const limit = startLimit || 10;
+
   const allUsers = await db.user.findMany({
     skip: index,
     take: limit,
     where: {
       active: true,
+      OR: email ? [{ email: { contains: email, mode: 'insensitive' } }] : undefined,
     },
     select: {
+      id: true,
       email: true,
       verified: true,
       createdAt: true,
       password: false,
       verificationCode: false,
+      order: true,
+
       profile: {
         select: {
           firstName: true,

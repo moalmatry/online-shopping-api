@@ -31,9 +31,10 @@ import { db } from '../db';
  */
 export const getAllUsersHandler = catchAsync(
   async (req: Request<object, object, object, GetAllUsersInput>, res: Response, next: NextFunction) => {
-    const { index: clientIndex, limit: ClientLimit } = req.query;
+    const { index: clientIndex, limit: ClientLimit, email } = req.query;
     const { limit, startIndex, total } = await createPaginationPrisma(clientIndex, ClientLimit, db.user);
-    const users = await getUsers(startIndex, limit);
+
+    const users = await getUsers(startIndex, limit, email);
 
     res.status(200).json({
       status: 'success',

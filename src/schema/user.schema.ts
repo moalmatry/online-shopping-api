@@ -147,6 +147,7 @@ export const getAllUsersSchema = z.object({
   query: z.object({
     index: z.string().min(1).optional(),
     limit: z.string().min(1).optional(),
+    email: z.string().optional(),
   }),
 });
 

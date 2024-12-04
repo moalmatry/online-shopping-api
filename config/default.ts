@@ -1,5 +1,5 @@
 export default {
-  port: 3000,
+  port: 8000,
   dbUrl: 'postgresql://neondb_owner:FvD76mxVwGeI@ep-orange-mud-a8l8q4xf.eastus2.azure.neon.tech/',
   logLevel: 'info',
   accessTokenPrivateKey: '',
