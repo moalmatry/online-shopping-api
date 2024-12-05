@@ -151,6 +151,12 @@ export const getAllUsersSchema = z.object({
   }),
 });
 
+export const getUserSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
+});
+
 export type CreateUserInput = z.TypeOf<typeof createUserSchema>['body'];
 export type VerifyUserInput = z.TypeOf<typeof verifyUserSchema>['params'];
 export type ForgotPasswordInput = z.TypeOf<typeof forgotPasswordSchema>['body'];
@@ -161,3 +167,4 @@ export type RestoreUserInput = z.TypeOf<typeof restoreUserSchema>['body'];
 export type UpdateUserInput = z.TypeOf<typeof updateUserSchema>['body'];
 export type DeleteUserInput = z.TypeOf<typeof deleteUserSchema>['body'];
 export type GetAllUsersInput = z.TypeOf<typeof getAllUsersSchema>['query'];
+export type GetUserSchema = z.TypeOf<typeof getUserSchema>['params'];

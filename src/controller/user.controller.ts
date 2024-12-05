@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   DeleteUserInput,
   GetAllUsersInput,
+  GetUserSchema,
   RestoreUserInput,
   UpdateMeInput,
   UpdateUserInput,
@@ -11,6 +12,7 @@ import {
   deleteMe,
   deleteUser,
   findUserByEmail,
+  findUserById,
   getUsers,
   restoreUser,
   updateMe,
@@ -26,6 +28,7 @@ import { db } from '../db';
  *  @example   res.status(200).json({
     status: 'success',
     results: users.length,
+    totalResults: total,
     data: { users },
   });
  */
@@ -35,7 +38,6 @@ export const getAllUsersHandler = catchAsync(
     const { limit, startIndex, total } = await createPaginationPrisma(clientIndex, ClientLimit, db.user);
 
     const users = await getUsers(startIndex, limit, email);
-
     res.status(200).json({
       status: 'success',
       results: users.length,
@@ -44,6 +46,47 @@ export const getAllUsersHandler = catchAsync(
     });
   },
 );
+
+/** @description finds & returns user by id  from db
+ *  @example   res.status(200).json({
+    status: 'success',
+    data: { user },
+  });
+ */
+export const getUserHandler = catchAsync(async (req: Request<GetUserSchema>, res, next) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return next(new AppError('Please enter an id', 404));
+  }
+  const user = await findUserById(id);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: {
+        id: user?.id,
+        email: user?.email,
+        verified: user?.verified,
+        createdAt: user?.createdAt,
+        role: user?.role,
+
+        profile: {
+          firstName: user?.profile?.firstName,
+          lastName: user?.profile?.lastName,
+          phoneNumber: user?.profile?.phoneNumber,
+          gender: user?.profile?.gender,
+        },
+        address: {
+          city: user?.address?.city,
+          state: user?.address?.state,
+          zipCode: user?.address?.zipCode,
+          street: user?.address?.street,
+        },
+      },
+    },
+  });
+});
 
 /**@description update user data without password and returns updated user */
 export const updateMeHandler = catchAsync(

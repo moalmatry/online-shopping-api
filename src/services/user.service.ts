@@ -42,7 +42,7 @@ export const createUser = async (input: UserInputService) => {
   }
 };
 
-/** @description find user by id */
+/** @description find user by id and it returns all user data included password */
 export const findUserById = async (id: string) => {
   const user = await db.user.findFirst({
     where: {

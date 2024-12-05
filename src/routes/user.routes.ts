@@ -4,6 +4,7 @@ import {
   createUserSchema,
   deleteUserSchema,
   getAllUsersSchema,
+  getUserSchema,
   restoreUserSchema,
   updateMeSchema,
   updatePasswordSchema,
@@ -26,6 +27,7 @@ import {
   deleteUserHandler,
   getAllUsersHandler,
   getMeHandler,
+  getUserHandler,
   restoreUserHandler,
   updateMeHandler,
   updateUserHandler,
@@ -58,7 +60,10 @@ router.delete('/delete-me', protect, deleteMeHandler);
 router.get('/me', protect, getMeHandler);
 
 // NOTE: Start admin routes
+
 router.get('/', validateResource(getAllUsersSchema), protect, restrictTo('ADMIN', 'EMPLOYEE'), getAllUsersHandler);
+router.get('/:id', validateResource(getUserSchema), protect, restrictTo('ADMIN', 'EMPLOYEE'), getUserHandler);
+
 router.patch(
   '/restore-user',
   validateResource(restoreUserSchema),
