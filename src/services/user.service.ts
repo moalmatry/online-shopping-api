@@ -52,6 +52,7 @@ export const findUserById = async (id: string) => {
     include: {
       profile: true,
       address: true,
+      order: true,
     },
   });
 

@@ -10,6 +10,7 @@ import AppError from './utils/AppError';
 import log from './utils/logger';
 import globalErrorHandler from './controller/error.controller';
 import { CustomRequest } from './types';
+import cors from 'cors';
 
 const app = express();
 
@@ -25,6 +26,7 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+app.use(cors({ origin: 'http://localhost:3000' }));
 // Body parser , reading data from body int req.body
 app.use(express.json({ limit: '10kb' }));
 

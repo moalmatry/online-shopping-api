@@ -83,6 +83,7 @@ export const getUserHandler = catchAsync(async (req: Request<GetUserSchema>, res
           zipCode: user?.address?.zipCode,
           street: user?.address?.street,
         },
+        order: user?.order,
       },
     },
   });
