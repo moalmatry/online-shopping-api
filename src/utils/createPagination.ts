@@ -9,7 +9,11 @@ export const createPaginationPrisma = async <T>(
   const startIndex = (page - 1) * limit;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //   @ts-expect-error
-  const total = await document.count();
+  const total = await document.count({
+    where: {
+      active: true,
+    },
+  });
 
   return { startIndex, limit, total };
 };

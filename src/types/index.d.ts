@@ -39,7 +39,7 @@ export interface UpdateMeDataProps {
   lastName?: string;
   email?: string;
   gender?: Gender;
-  phoneNumber?: string;
+  phoneNumber?: string | null;
   city?: string;
   state?: string;
   zipCode?: string;

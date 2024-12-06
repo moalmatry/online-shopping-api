@@ -124,23 +124,10 @@ export const updateMeHandler = catchAsync(
 /** @description makes admin update user data */
 export const updateUserHandler = catchAsync(
   async (req: Request<object, object, UpdateUserInput>, res: Response, next: NextFunction) => {
-    const {
-      email,
-      firstName,
-      fullAddress,
-      gender,
-      lastName,
-      phoneNumber,
-      role,
-      verified,
-      active,
-      city,
-      state,
-      street,
-      zipCode,
-    } = req.body;
+    const { email, firstName, gender, lastName, phoneNumber, role, verified, active, city, state, street, zipCode } =
+      req.body;
 
-    if (!phoneNumber && !fullAddress && !email && !firstName && !lastName && !gender && role && verified) {
+    if (!phoneNumber && !email && !firstName && !lastName && !gender && role && verified) {
       return next(new AppError('There is no data to update', 400));
     }
 

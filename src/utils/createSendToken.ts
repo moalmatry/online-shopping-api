@@ -40,6 +40,7 @@ export const createSendToken = (user: User | any, statusCode: number, res: Respo
         verificationCode: user?.verificationCode,
         createdAt: user?.createdAt,
         phoneNumber: user.profile.phoneNumber,
+        role: user.role,
       },
     },
   });

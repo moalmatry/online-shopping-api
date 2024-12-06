@@ -107,19 +107,19 @@ export const updateUserSchema = z.object({
     firstName: z.string().optional(),
     lastName: z.string().optional(),
     email: z.string().email('Not valid email address'),
-    fullAddress: z.string().min(20, 'Address must be at least 20 characters').optional(),
     phoneNumber: z
       .string()
       .refine(
         (val) => {
           const phoneRegex = /^[+]?[0-9]{1,4}?[-.\s]?(\([0-9]{1,3}\)|[0-9]{1,4})[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}$/;
-          return phoneRegex.test(val);
+          return phoneRegex.test(val ?? '');
         },
         {
           message: 'Invalid phone number format',
         },
       )
-      .optional(),
+      .optional()
+      .nullable(),
     gender: z.enum(Gender).optional(),
     verified: z.boolean().optional(),
     role: z.enum(Role).optional(),
