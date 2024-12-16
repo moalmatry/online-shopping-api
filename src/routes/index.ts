@@ -18,8 +18,8 @@ router.get('/', (req: Request, res: Response) => {
   return res.send('Express Typescript on Vercel !!!!!');
 });
 
-router.use('/api/users', user);
-router.use('/api/categories', categories);
-router.use('/api/products', products);
+router.use('/api/v1/users', user);
+router.use('/api/v1/categories', categories);
+router.use('/api/v1/products', products);
 
 export default router;
