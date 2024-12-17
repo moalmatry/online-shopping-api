@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from 'express';
 import user from './user.routes';
 import categories from './categories.routes';
 import products from './products.routes';
+import orders from './orders.routes';
 
 import log from '../utils/logger';
 
@@ -21,5 +22,6 @@ router.get('/', (req: Request, res: Response) => {
 router.use('/api/v1/users', user);
 router.use('/api/v1/categories', categories);
 router.use('/api/v1/products', products);
+router.use('/api/v1/orders', orders);
 
 export default router;

@@ -49,12 +49,34 @@ model Address {
 }
 
 model Order {
-  id          String    @id @default(uuid())
-  userId      String
-  user        User      @relation(fields: [userId], references: [id])
-  totalAmount Float
-  status      Status    @default(PENDING)
-  products    Product[]
+  id         String @id @default(uuid())
+  userId     String
+  user       User   @relation(fields: [userId], references: [id])
+  totalPrice Float
+  status     Status @default(PENDING)
+}
+
+// OrderProduct
+model OrderProduct {
+  id        String @id @default(uuid())
+  orderId   Int
+  // order     Order   @relation(fields: [orderId], references: [id])
+  productId Int
+  // product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+}
+
+model Product {
+  id           String    @id @default(uuid())
+  name         String
+  description  String?
+  categoryName String
+  category     Category  @relation(fields: [categoryName], references: [name])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now())
+  variants     Variant[]
+  // available    Boolean   @default(true)
+  // tags         String[]
 }
 
 model Category {
@@ -64,23 +86,6 @@ model Category {
   products Product[]
 }
 
-model Product {
-  id           String    @id @default(uuid())
-  name         String
-  price        Float
-  images       String[]
-  description  String?
-  available    Boolean   @default(true)
-  tags         String[]
-  categoryName String
-  category     Category  @relation(fields: [categoryName], references: [name])
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @default(now())
-  variants     Variant[]
-  Order        Order?    @relation(fields: [orderId], references: [id])
-  orderId      String?
-}
-
 model Variant {
   id        String  @id @default(uuid())
   size      String?
@@ -88,6 +93,10 @@ model Variant {
   productId String
   product   Product @relation(fields: [productId], references: [id])
 }
+
+// Cart
+
+// CartProduct
 
 enum Gender {
   MALE
