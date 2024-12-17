@@ -3,13 +3,13 @@ import {
   createCategoryHandler,
   deleteCategoryHandler,
   getAllCategoriesHandler,
-  getCategoryByNameHandler,
+  getCategoryByIdHandler,
   updateCategoryHandler,
 } from '../controller/categories.controller';
 import { protect } from '../middleware/protectResource';
 import { restrictTo } from '../middleware/restrictTo';
 import validateResource from '../middleware/validateResource';
-import { categoryByNameSchema, createCategorySchema, updateCategorySchema } from '../schema/categories.schema';
+import { categoryByIdSchema, createCategorySchema, updateCategorySchema } from '../schema/categories.schema';
 
 const router = express.Router();
 
@@ -19,7 +19,6 @@ router
   .post(validateResource(createCategorySchema), protect, restrictTo('ADMIN', 'EMPLOYEE'), createCategoryHandler)
   .patch(validateResource(updateCategorySchema), protect, restrictTo('ADMIN', 'EMPLOYEE'), updateCategoryHandler)
   .delete(protect, restrictTo('ADMIN', 'EMPLOYEE'), deleteCategoryHandler);
-
-router.get('/:name', validateResource(categoryByNameSchema), getCategoryByNameHandler);
+router.get('/:id', validateResource(categoryByIdSchema), getCategoryByIdHandler);
 
 export default router;

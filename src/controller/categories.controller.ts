@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import {
-  createCategory,
-  deleteCategory,
-  findCategoryByName,
-  getCategories,
-  updateCategory,
-} from '../services/categories.service';
-import catchAsync from '../utils/catchAsync';
-import AppError from '../utils/AppError';
-import {
-  CategoryByNameInput,
+  CategoryByIdInput,
   CreateCategoryInput,
   DeleteCategoryInput,
   UpdateCategoryInput,
 } from '../schema/categories.schema';
+import {
+  createCategory,
+  deleteCategory,
+  findCategoryById,
+  getCategories,
+  updateCategory,
+} from '../services/categories.service';
+import AppError from '../utils/AppError';
+import catchAsync from '../utils/catchAsync';
 
 /**@description get all categories */
 export const getAllCategoriesHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -30,9 +30,10 @@ export const getAllCategoriesHandler = catchAsync(async (req: Request, res: Resp
   });
 });
 
-export const getCategoryByNameHandler = catchAsync(async (req: Request<CategoryByNameInput>, res, next) => {
-  const { name } = req.params;
-  const category = await findCategoryByName(name);
+export const getCategoryByIdHandler = catchAsync(async (req: Request<CategoryByIdInput>, res, next) => {
+  const { id } = req.params;
+
+  const category = await findCategoryById(id);
 
   if (!category) {
     return next(new AppError('Category not found', 404));
@@ -77,15 +78,15 @@ export const updateCategoryHandler = catchAsync(
 /**@description delete existing category */
 export const deleteCategoryHandler = catchAsync(
   async (req: Request<object, object, DeleteCategoryInput>, res: Response, next: NextFunction) => {
-    const { name } = req.body;
+    const { id } = req.body;
 
-    const deletedCategory = await deleteCategory(name);
+    const deletedCategory = await deleteCategory(id);
 
     if (!deletedCategory) {
       return next(new AppError('Category not fount please make sure that is exists', 400));
     }
 
-    res.status(201).json({
+    res.status(204).json({
       status: 'success',
       data: { category: deletedCategory },
     });

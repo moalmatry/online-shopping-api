@@ -34,10 +34,10 @@ export const updateCategory = async (name: string, newName: string) => {
   return updatedCategory;
 };
 
-export const deleteCategory = async (name: string) => {
+export const deleteCategory = async (id: string) => {
   const deletedCategory = await db.category.delete({
     where: {
-      name,
+      id,
     },
   });
 
@@ -53,5 +53,18 @@ export const findCategoryByName = async (name: string) => {
       products: true,
     },
   });
+  return category;
+};
+
+export const findCategoryById = async (id: string) => {
+  const category = await db.category.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      products: false,
+    },
+  });
+
   return category;
 };
