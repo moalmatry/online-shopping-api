@@ -23,11 +23,12 @@ model User {
   verificationCode    String   @default(uuid())
   passwordRestExpires String?  @default(dbgenerated("null"))
   passwordRestCode    String? // Optional field
-  order               Order[]
   profile             Profile?
   address             Address?
-  createdAt           DateTime @default(now())
+  Cart                Cart?
+  order               Order[]
   updatedAt           DateTime @default(now())
+  createdAt           DateTime @default(now())
 }
 
 model Profile {
@@ -49,34 +50,47 @@ model Address {
 }
 
 model Order {
-  id         String @id @default(uuid())
-  userId     String
-  user       User   @relation(fields: [userId], references: [id])
-  totalPrice Float
-  status     Status @default(PENDING)
+  id            String         @id @default(uuid())
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  totalPrice    Float
+  status        Status         @default(PENDING)
+  orderProducts OrderProduct[]
+  createdAt     DateTime       @default(now())
 }
 
-// OrderProduct
 model OrderProduct {
-  id        String @id @default(uuid())
-  orderId   Int
-  // order     Order   @relation(fields: [orderId], references: [id])
-  productId Int
-  // product   Product @relation(fields: [productId], references: [id])
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
   quantity  Int
 }
 
 model Product {
-  id           String    @id @default(uuid())
-  name         String
-  description  String?
-  categoryName String
-  category     Category  @relation(fields: [categoryName], references: [name])
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @default(now())
-  variants     Variant[]
-  // available    Boolean   @default(true)
-  // tags         String[]
+  id            String         @id @default(uuid())
+  name          String
+  description   String?
+  tags          String[]
+  categoryName  String
+  category      Category       @relation(fields: [categoryName], references: [name])
+  variants      Variant[]
+  orderProducts OrderProduct[]
+  CartProduct   CartProduct[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+}
+
+model Variant {
+  id          String  @id @default(uuid())
+  price       Float
+  image       String
+  description String
+  available   Boolean @default(true)
+  quantity    Int
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
 }
 
 model Category {
@@ -86,17 +100,22 @@ model Category {
   products Product[]
 }
 
-model Variant {
-  id        String  @id @default(uuid())
-  size      String?
-  price     Float
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
+model Cart {
+  id          String        @id @default(uuid())
+  userId      String        @unique
+  user        User          @relation(fields: [userId], references: [id])
+  CartProduct CartProduct[]
 }
 
-// Cart
-
 // CartProduct
+model CartProduct {
+  id        String  @id @default(uuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+}
 
 enum Gender {
   MALE
