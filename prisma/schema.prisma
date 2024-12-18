@@ -27,8 +27,10 @@ model User {
   address             Address?
   Cart                Cart?
   order               Order[]
-  updatedAt           DateTime @default(now())
   createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([id])
 }
 
 model Profile {
@@ -79,18 +81,19 @@ model Product {
   orderProducts OrderProduct[]
   CartProduct   CartProduct[]
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Variant {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
+  name        String
   price       Float
-  image       String
+  images      String[]
   description String
-  available   Boolean @default(true)
+  available   Boolean  @default(true)
   quantity    Int
   productId   String
-  product     Product @relation(fields: [productId], references: [id])
+  product     Product  @relation(fields: [productId], references: [id])
 }
 
 model Category {
@@ -98,6 +101,8 @@ model Category {
   name     String    @unique
   image    String?
   products Product[]
+
+  @@index([id])
 }
 
 model Cart {

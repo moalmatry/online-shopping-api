@@ -133,16 +133,16 @@ export const getUsers = async (startIndex: number, startLimit: number, email?: s
       createdAt: true,
       password: false,
       verificationCode: false,
-      order: true,
+      // order: true,
 
-      profile: {
-        select: {
-          firstName: true,
-          lastName: true,
-          phoneNumber: true,
-          gender: true,
-        },
-      },
+      // profile: {
+      //   select: {
+      //     firstName: true,
+      //     lastName: true,
+      //     phoneNumber: true,
+      //     gender: true,
+      //   },
+      // },
     },
   });
 

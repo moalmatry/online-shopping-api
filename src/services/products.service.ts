@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { ProductDataProps, UpdateDataProps } from '../types';
+import { ProductDataProps, UpdateProductProps } from '../types';
 
 export const getAllProducts = async () => {
   const allProducts = db.product.findMany({});
@@ -7,11 +7,24 @@ export const getAllProducts = async () => {
   return allProducts;
 };
 
-export const findProductByName = async (name: string) => {
-  const products = db.product.findMany({
+export const findProductById = async (id: string) => {
+  // const products = db.product.findMany({
+  //   where: {
+  //     OR: [{ name: { contains: name, mode: 'insensitive' } }],
+  //     // { description: { contains: name, mode: 'insensitive' } }
+  //   },
+  // });
+
+  const products = db.product.findFirst({
     where: {
-      OR: [{ name: { contains: name, mode: 'insensitive' } }],
-      // { description: { contains: name, mode: 'insensitive' } }
+      id,
+    },
+    select: {
+      name: true,
+      description: true,
+      tags: true,
+      categoryName: true,
+      variants: true,
     },
   });
 
@@ -19,33 +32,37 @@ export const findProductByName = async (name: string) => {
 };
 
 export const createNewProduct = async (productData: ProductDataProps) => {
+  const { categoryName, description, name, tags, variants } = productData;
   const newProduct = await db.product.create({
     data: {
-      name: productData.name,
-      description: productData.description,
-      categoryName: productData.categoryName,
-      price: productData.price,
-      images: productData.images,
-      tags: productData.tags,
+      name,
+      description,
+      categoryName,
+      tags,
+      variants: {
+        create: [...variants],
+      },
+    },
+    select: {
+      name: true,
+      description: true,
     },
   });
 
   return newProduct;
 };
 
-export const updateProduct = async (updateProduct: UpdateDataProps) => {
-  const { id, price, categoryName, description, images, name, tags } = updateProduct;
+export const updateProduct = async (updateProduct: UpdateProductProps) => {
+  const { id, name, description, categoryName, tags } = updateProduct;
   const updatedProduct = await db.product.update({
     where: {
       id,
     },
     data: {
-      price,
-      categoryName,
-      description,
-      images,
       name,
+      description,
       tags,
+      categoryName,
     },
   });
 

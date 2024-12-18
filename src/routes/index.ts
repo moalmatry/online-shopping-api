@@ -23,5 +23,6 @@ router.use('/api/v1/users', user);
 router.use('/api/v1/categories', categories);
 router.use('/api/v1/products', products);
 router.use('/api/v1/orders', orders);
+router.use('/api/v1/variants', products);
 
 export default router;

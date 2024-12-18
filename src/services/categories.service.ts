@@ -21,13 +21,14 @@ export const createCategory = async (name: string) => {
   return newCategory;
 };
 
-export const updateCategory = async (name: string, newName: string) => {
+export const updateCategory = async (id: string, name?: string, image?: string | null) => {
   const updatedCategory = await db.category.update({
     where: {
-      name,
+      id,
     },
     data: {
-      name: newName,
+      name,
+      image,
     },
   });
 

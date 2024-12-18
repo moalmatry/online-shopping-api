@@ -60,9 +60,9 @@ export const createCategoryHandler = catchAsync(
 /**@description update existing category */
 export const updateCategoryHandler = catchAsync(
   async (req: Request<object, object, UpdateCategoryInput>, res: Response, next: NextFunction) => {
-    const { name, newName } = req.body;
+    const { name, id, image } = req.body;
 
-    const updatedCategory = await updateCategory(name, newName);
+    const updatedCategory = await updateCategory(id, name, image);
 
     if (!updatedCategory) {
       return next(new AppError('Category not fount please make sure that is exists', 400));

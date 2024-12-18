@@ -7,16 +7,14 @@ export const createCategorySchema = z.object({
 });
 
 export const updateCategorySchema = z.object({
-  body: z
-    .object({
-      name: z.string({ required_error: 'Please enter category name' }).min(5, 'category should be least 5 characters'),
-      newName: z
-        .string({ required_error: 'Please enter category name' })
-        .min(5, 'category should be least 5 characters'),
-    })
-    .refine((data) => data.name !== data.newName, {
-      message: 'its the same name 😡',
-    }),
+  body: z.object({
+    id: z.string({ required_error: 'Please enter category id' }).min(5, 'category should be least 5 characters'),
+    name: z
+      .string({ required_error: 'Please enter category name' })
+      .min(5, 'category should be least 5 characters')
+      .optional(),
+    image: z.string({ required_error: 'Please enter category image' }).nullable().optional(),
+  }),
 });
 
 export const deleteCategorySchema = z.object({

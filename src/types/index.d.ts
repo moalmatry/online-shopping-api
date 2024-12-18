@@ -61,21 +61,35 @@ export interface UpdateUserProps extends UpdateMeDataProps {
 }
 
 export interface ProductDataProps {
-  categoryName: string;
-  description?: string;
   name: string;
-  price: number;
-  images?: string[];
-  tags?: string[];
+  description: string;
+  tags: string[];
+  categoryName: string;
+  variants: {
+    name: string;
+    price: number;
+    images: string[];
+    description: string;
+    available: boolean;
+    quantity: number;
+  }[];
 }
-export interface UpdateDataProps {
+export interface UpdateProductProps {
   id: string;
-  categoryName?: string;
-  description?: string;
   name?: string;
-  price: number;
-  images?: string[];
+  description?: string;
   tags?: string[];
+  categoryName?: string;
+}
+
+export interface UpdateVariant {
+  id: string;
+  name?: string;
+  price?: number;
+  images?: string[];
+  description?: string;
+  available?: boolean;
+  quantity?: number;
 }
 
 export interface UserInputService {

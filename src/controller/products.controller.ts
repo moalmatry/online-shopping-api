@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
-import catchAsync from '../utils/catchAsync';
-import {
-  CreateProductInput,
-  DeleteProductInput,
-  ProductByNameInput,
-  UpdateProductInput,
-} from '../schema/products.schema';
+import { CreateProductInput, DeleteProductInput, ProductById, UpdateProductInput } from '../schema/products.schema';
 import {
   createNewProduct,
   deleteProduct,
-  findProductByName,
+  findProductById,
   getAllProducts,
   updateProduct,
 } from '../services/products.service';
+import catchAsync from '../utils/catchAsync';
+import AppError from '../utils/AppError';
 
 /** @description return all products */
 export const getAllProductsHandler = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -26,16 +22,17 @@ export const getAllProductsHandler = catchAsync(async (req: Request, res: Respon
   });
 });
 
-export const findProductByNameHandler = catchAsync(
-  async (req: Request<ProductByNameInput>, res: Response, next: NextFunction) => {
-    const { name } = req.params;
+export const getProductByIdHandler = catchAsync(
+  async (req: Request<ProductById>, res: Response, next: NextFunction) => {
+    const { id } = req.params;
 
-    const products = await findProductByName(name);
-
+    const product = await findProductById(id);
+    if (!product) {
+      return next(new AppError('Please enter valid id', 404));
+    }
     res.status(200).json({
       status: 'success',
-      results: products.length,
-      data: { products },
+      data: { product },
     });
   },
 );
@@ -43,15 +40,14 @@ export const findProductByNameHandler = catchAsync(
 /** @description create new product */
 export const createNewProductHandler = catchAsync(
   async (req: Request<object, object, CreateProductInput>, res: Response, next: NextFunction) => {
-    const { categoryName, description, name, price, images, tags } = req.body;
+    const { categoryName, description, name, variants, tags } = req.body;
 
     const product = await createNewProduct({
       categoryName,
       description,
       name,
-      price,
-      images,
-      tags,
+      tags: tags ?? [],
+      variants: variants ?? [],
     });
 
     res.status(200).json({
@@ -64,15 +60,13 @@ export const createNewProductHandler = catchAsync(
 /** @description update product */
 export const updateProductHandler = catchAsync(
   async (req: Request<object, object, UpdateProductInput>, res: Response, next: NextFunction) => {
-    const { categoryName, description, id, name, price, images, tags } = req.body;
+    const { id, categoryName, description, name, tags } = req.body;
 
     const updatedProduct = await updateProduct({
       id,
-      categoryName,
-      description,
       name,
-      price,
-      images,
+      description,
+      categoryName,
       tags,
     });
 
